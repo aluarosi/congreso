@@ -1,0 +1,324 @@
+<!doctype html>
+<!--
+@source: https://github.com/aluarosi/congreso
+@licstart  
+    This file is part of CongrESo
+    (Spanish Congress, an interactive visualization)
+    https://github.com/aluarosi/congreso
+    
+    Copyright (C) 2014 Alvaro Santamaria Herrero (aluarosi)
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+@licend  
+-->
+
+<html>
+<head>
+  <title>Congreso ES</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- BOOTSTRAP 3 --> 
+  <!--<link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="css/my_styles.css">
+
+<!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+  <!-- D3.js 
+    http://d3js.org
+    Sites using HTTPS may wish to self-host D3, or use a CDN that supports HTTPS, such as CDNJS. 
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+  <!-- Latest cmpiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script src="js/data1.js"></script>
+  <!--<script src="js/test1.js"></script>-->
+  <script src="js/congreso.js"></script>
+  <script>
+    //CONGRESO.main();
+    $(document).ready(CONGRESO.main.bind(CONGRESO));
+  </script>
+
+
+</head>
+<body>
+  <style>
+    .title-underline {
+      border-bottom: 1px solid grey;
+      padding-top: 0.2em;
+      padding-left: 0.2em;
+      margin-top: 1em;
+      font-size: 140%;
+    }
+
+    #right-panel {
+      padding-right: 3em;
+      padding-left: 3em;
+    }
+
+    #legend-container {
+     margin-top: 0.5em;
+     margin-bottom: 0.5em;
+
+    }
+    
+    .hidden {
+     /* For hiding some elements while loading */
+     display: none;
+    }
+
+    #hint {
+     float: right;
+     font-size: 1.1em;
+    }
+    
+    /*
+    #parlamento {
+      background-image: url("/img/fondo_congreso.png");
+      background-size: 140% 120%;
+      border: 1px solid #eee;
+    }
+    */
+  </style>
+
+
+  <div class="container">
+
+<a href="https://github.com/aluarosi/congreso"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+    <div class="row">
+      <div class="page-header">
+        <h2>¿Cuánto se gana en el Congreso?<small> El Sueldo de los Diputados</small>
+          <button class="btn btn-primary btn-s" data-toggle="modal" data-target="#myModal">
+            Metodología
+          </button>
+        </h2>
+      </div>
+    </div>
+
+    <div class="row" id="outer-container" >
+
+      <div class="col-md-7" id="congress-container" >
+
+        <div class="row">
+          <div id="hint" class="hidden text-muted">
+            <span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span>
+            ¡Explora el hemiciclo! 
+          </div>
+          <div id="congress-container">
+            <div id="buttons" class="btn-group hidden" data-toggle="buttons">
+              <label class="btn btn-default btn-sm">
+                <input class="view-selector" type="radio" name="0" id="option1" autocomplete="off" > Grupo
+              </label>
+              <label class="btn btn-default btn-sm active">
+                <input class="view-selector" type="radio" name="1" id="option2" autocomplete="off" checked> Sueldo
+              </label>
+              <label class="btn btn-default btn-sm">
+                <input class="view-selector" type="radio" name="2" id="option3" autocomplete="off"> Sexo
+              </label>
+            </div>
+          </div>
+          <div id="legend-container">
+          </div>
+        </div>
+        
+
+
+        <svg  xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          id="parlamento" width="800" height="600">
+        </svg>
+        <div id="info-extended" class="row" style="margin-top: 1em">
+        </div>
+      </div>
+    
+
+      <div class="col-md-5 hidden" id="right-panel">
+        <div class="row">
+
+          <div class="col-md-12" id="right-panel-1">
+
+            <div class = "row" id="navigation">
+              <ul class="nav nav-tabs" id="navigation-tabs">
+                <li role="presentation" id="nav-rank" class="active"><a>Ranking</a></li>
+                <li role="presentation" id="nav-avg" ><a >Resumen</a></li>
+              </ul>
+            </div>
+    
+            <div id="ranking" class="row nav-target nav-rank">
+              <!--<h4 class="title-underline">Ranking</h4>-->
+              <p class="text-muted" style="margin-top:0.5em;">Busca diputados/as por nombre, provincia o grupo parlamentario. Haz click en la chincheta para seleccionar y fijar arriba de la lista.</p>
+              <div class="input-group" style="margin-bottom:1em">
+                <input type="search" class="form-control" title="Introduce texto de búsqueda" placeholder="Busca Diputados/as"
+                  id="ranking-filter" >
+                <span id="ranking-filter-submit" class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+              </div>
+              <div id="ranking-list">
+              </div>
+            </div>
+
+            <div id="averages" class="row nav-target nav-avg" style="padding-left:1em;">
+              <h4 class="title-underline">Total Sueldos</h4>
+              <div id="total">
+              </div>
+              <h4 class="title-underline">Sueldo Mediano</h4>
+              <div id="average-gender">
+              </div>
+              <h4 class="title-underline">Sueldo Mediano por Grupo</h4>
+              <div id="average-group">
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+<!--
+          <div class="col-md-5" id="right-panel-2" >
+    
+    
+      
+      
+          </div>
+-->
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h3 class="modal-title" id="myModalLabel">Cuánto Cobran los Diputados <small>Información y Metodología</small></h3>
+      </div>
+      <div class="modal-body">
+
+<h3>Resumen</h3>
+<p>Este gráfico interactivo, fruto del trabajo colectivo del <a href="http://medialab-prado.es/article/iitallerdeproducciondeperiodismodedatossigueelrastrodeldineropublicoconvocatoriadecolaboradores">II Taller de Periodismo de Datos</a> de <a href="http://medialab-prado.es/">Medialab-Prado</a>, pretende dar a conocer el sueldo real de los diputados en el <a hre="http://www.congreso.es">Congreso</a> y nace de la propuesta presentada por <a href="https://twitter.com/ines_calderon">Inés Calderón</a>, miembro del equipo de 'El Objetivo' (La Sexta), para conocer cuánto cobran de verdad los diputados. 
+</p>
+<p>
+El primer paso fue la recopilación de datos, para lo cual acudimos a la página del <a href="http://www.congreso.es">Congreso de los Diputados</a>. Dicha página recoge el listado de diputados por partido, con sus respectivos cargos. Pero no incluye información sobre el dinero que cobra cada uno. Para ello, es necesario acudir al <a href="http://www.congreso.es/portal/page/portal/Congreso/Congreso/Diputados/RegEcoyProtSoc/regimen_economico_diputados.pdf" target="_blank">régimen económico oficial</a>, donde se desglosa la cuantía recibida por cada cargo.
+</p>
+<p>
+Este trabajo, que se evitaría si el Congreso no sólo hiciera la información pública sino también reutilizable, exige la comprobación de los cargos de cada diputado y la incorporación manual de cada cantidad asignada. Las repetidas comprobaciones de los datos incluyen una verificación mediante Python -usado también para validar la metodología- y una comparación con las publicaciones oficiales del sueldo de los diputados consultados en las webs de transparencia de Izquierda Unida y UPyD. 
+</p>
+<p>
+La base de datos construida con este ejercicio de recopilación fue la base utilizada para crear, con la librería de JavaScript <a href="d3js.org">D3js</a>, la representación del hemiciclo. 
+</p>
+<p>Los datos originales fueron extraídos de la web del Congreso de los Diputados entre Octubre y Diciembre de 2014.</p>
+
+<h3>Participantes en el Proyecto</h3>
+<p>
+En el texto, visualización y metodología trabajaron 
+<a href="https://twitter.com/ines_calderon">Inés Calderón</a>,  
+<a href="https://twitter.com/RamarisAlbert">Ramaris Albert</a>, 
+<a href="https://twitter.com/pauguisado">Paula Guisado</a>, 
+<a href="https://twitter.com/lorensia_rr" >Lorena Rojo</a>, 
+<a href="https://twitter.com/OlallaUriarte">Olalla Uriarte</a>, 
+<a href="https://twitter.com/lopezg_patricia">Patricia López</a>, 
+<a href="http://kantfish.com">Emanuele Giusto</a>,
+<a href="https://twitter.com/Pilarjlopez" >Pilar López</a>, 
+y <a href="https://twitter.com/DoFideas">Álvaro Santamaría</a>. 
+
+En la recopilación de datos han colaborado 
+<a href="https://twitter.com/ines_calderon">Inés Calderón</a>,  
+<a href="https://twitter.com/RamarisAlbert">Ramaris Albert</a>, 
+<a href="https://twitter.com/pauguisado">Paula Guisado</a>, 
+<a href="https://twitter.com/lorensia_rr" >Lorena Rojo</a>, 
+<a href="https://twitter.com/OlallaUriarte">Olalla Uriarte</a>, 
+<a href="https://twitter.com/lopezg_patricia">Patricia López</a>, 
+<a href="http://kantfish.com">Emanuele Giusto</a>, 
+<a href="https://twitter.com/Pilarjlopez" >Pilar López</a>, 
+<a href="https://twitter.com/victorernan">Víctor Hernán</a> 
+<a>Raúl Sánchez</a>, 
+<a>Marta Quíntin</a>, 
+<a>Mar Carpena</>, 
+y <a>Juan Francisco Caro</a>. 
+La programación del gráfico iteractivo fue realizada por <a href="https://twitter.com/DoFideas">Álvaro Santamaria</a>. 
+</p>
+
+<h3>Agradecimientos</h3>
+<p>Agradecemos a <a href="https://twitter.com/cabralens">Mar Cabra</a> y <a href="https://twitter.com/adolflow">Adolfo Antón</a> su trabajo de organización del <a href="http://medialab-prado.es/article/iitallerdeproducciondeperiodismodedatossigueelrastrodeldineropublicoconvocatoriadecolaboradores">II Taller de Periodismo de Datos</a>. También el apoyo y asesoría que dentro del marco de dicho Taller nos brindaron <a href="https://twitter.com/palewire">Ben Welsh</a>  de Los Angeles Times <a href="https://twitter.com/Mariano_Zafra">Mariano Zafra</a> de El País.</p>
+
+<h3>Licencia</h3>
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">El Sueldo de los Diputados</span> por <a xmlns:cc="http://creativecommons.org/ns#" href="http://comunidad.medialab-prado.es/es/proyectos/cu-nto-cuestan-de-verdad-los-diputados" property="cc:attributionName" rel="cc:attributionURL">¿Cuánto cuestan de verdad los diputados? II Taller de producción de Periodismo de Datos. Sigue el rastro del dinero público</a> se licencia como <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional License</a>.<br />Creado a partir de la obra en <a xmlns:dct="http://purl.org/dc/terms/" href="http://www.congreso.es/portal/page/portal/Congreso/Congreso" rel="dct:source">http://www.congreso.es/portal/page/portal/Congreso/Congreso</a>.
+
+<h3>Detalles sobre la Metodología</h3>
+<h4>Recopilación de Datos de Sueldos de los Diputados</h4>
+<p>
+Los datos de los <strong>sueldos</strong> de los diputados se obtuvieron manualmente de la página del <a href="http://congreso.es" target="_blank">Congreso de los Diputados</a>
+(La página web del Congreso no tiene una interfaz automatizada (API) para suministrar estos datos). Para ello se atendió a la información de la ficha de cada Diputado, donde se indica entre otros datos, la provincia y los cargos que desempeña en su labor como parlamentario, ya sea en la Mesa del Congreso, como portavoz de grupo parlamentario o como cargo en alguna comisión parlamentaria. Las asignaciones salariales por cada concepto están descritas en el <a href="http://www.congreso.es/portal/page/portal/Congreso/Congreso/Diputados/RegEcoyProtSoc/regimen_economico_diputados.pdf" target="_blank">Régimen Económico del Congreso de los Diputados</a>
+</p>
+<p>Los criterios que se siguieron para aplicar la información descrita en el Régimen Económico del Congreso fueron los siguientes</p>
+<ul>
+    <li>Todos los diputados cobran una asignación constitucional idéntica: 2.813,87 € mes.</li>
+    <li>Según la provincia se les asigna una indemnización:  1.823,86 € para los Diputados de circunscripciones distintas a Madrid y de 870,56 € para los electos por Madrid</li>
+    <li>Los diputados que son miembros de la Mesa del Congreso (Presidente, Vicepresidente y Secretarios) cobran un complemento, gastos de representación y gastos de libre disposición. Los miembros de la Mesa no cobran por otros cargos que pudieran tener en comisiones o como portavoces de grupo parlamentario.</li>
+    <li>Los portavoces y portavoces sustitutos (adjuntos) de los grupos parlamentarios, cobran gastos de representación y de libre disposición. Aunque en el Congreso nos informaron telefónicamente que estos no cobran cantidad adicional si tienen algún cargo en una comisión, esto está en contradicción con las nóminas publicadas en los portales de <a href="http://www.izquierda-unida.es/transparencia" target="_blank">IU</a> y <a href="http://weblogs.upyd.es/congreso/grupo-parlamentario/nuestros-diputados/">UPyD</a>, en las que se comprueba que los portavoces que a la vez tienen un cargo en una comisión cobran por ambos conceptos. Ante la disparidad de informaciones, hemos optado por la segunda opción: sumar las cantidades que se cobran por pertenecer a la Junta de Portavoces y por tener algún cargo en una comisión parlamentaria.</li>
+    <li>Los diputados/as que tengan más de un cargo en distintas comisiones sólo cobran por el cargo que les proporciona mayor remuneración.</li>
+</ul>
+<p>La información así elaborada fue posteriormente contrastada con: </p>
+<ul>
+    <li>Las webs mencionadas de <a href="http://www.izquierda-unida.es/transparencia" target="_blank">IU</a> y <a href="http://weblogs.upyd.es/congreso/grupo-parlamentario/nuestros-diputados/">UPyD</a> donde publican ejemplares de nóminas de sus diputados/as en el Congreso.</li>
+    <li>La web del proyecto <a href="http://quehacenlosdiputados.net/">Qué Hacen Los Diputados</a></li>
+</ul>
+<p>
+Una vez generada la tabla de diputados con los datos de sueldos y cargos así extraídos, se comprobó la consistencia y coherencia de los datos mediante un script en Python. De esta forma se pudieron localizar y corregir los errores derivados del procedimiento manual de extracción.
+</p>
+<h4>Recopilación de datos complementarios de los Diputados</h4>
+<p>Además, era necesario recopilar un conjunto de datos necesarios para la visualización final:</p>
+<ul>
+    <li>Nombres</li>
+    <li>Grupo Parlamentario</li>
+    <li>Provincia</li>
+    <li>Escaño asignado y posición en el hemiciclo</li>
+    <li>Enlace a fotografía del diputado/a que sirve la web del Congreso</li>
+    <li>Enlace a ficha del diputado/a que sirve la web del Congreso</li>
+</ul>
+<p>Para ello se preparó y utilizó un segundo script escrito en Python que extrajo de forma automática la información detallada, ante la ausencia de un interfaz automático (API) que proporcione esos datos en la web del Congreso.</p>
+<h4>Visualización</h4>
+<p>La visualización se realizó como aplicación para el navegador web, con la herramienta de visualización <a href="http://d3js.org/" target="_blank">D3.js</a>. La visualización consolida las dos tablas extraídas según se ha explicado anteriormente y muestra los resultados de forma interactiva.</p> <p>Para conseguir la mayor compatibilidad con dispositivos móviles, se usó la biblioteca <a href="http://getbootsrap.com" target="_blank">Bootstrap</a></p>
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
