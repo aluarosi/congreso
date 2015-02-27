@@ -285,7 +285,9 @@ var CONGRESO = (function(jquery, _, d3){
           } 
           return comision_monthly_salary;
         };
-        new_object.salary_month__comision = new_object.salary_month__mesa ? 0 : calculate_salary_comision(new_object.salary_components);
+        //new_object.salary_month__comision = new_object.salary_month__mesa ? 0 : calculate_salary_comision(new_object.salary_components);
+        // 20150227 --> It seems that Mesa's members can also receive money from Comisiones
+        new_object.salary_month__comision = calculate_salary_comision(new_object.salary_components);
 
         function calculate_salary_provincia(salary_components){
           var o = _.pick(salary_components, "Madrid");
