@@ -331,6 +331,8 @@ var CONGRESO = (function(jquery, _, d3){
         return [k, add_salary_calculations(v)];
       }));
 
+      console.log(JSON.stringify( $.data_merged, null, 4 ));
+
       setup();
     });
   };
